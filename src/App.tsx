@@ -9,7 +9,7 @@ type Step = 'loading' | 'start' | 'quiz' | 'result'
 
 export default function App() {
   const [quizData, setQuizData] = useState<QuizData | null>(null)
-  const [step, setStep] = useState<Step>('loading')
+  const [step, setStep] = useState<Step>('start')
   const [currentIndex, setCurrentIndex] = useState(0)
   const [answers, setAnswers] = useState<number[]>([])
   const [error, setError] = useState<string | null>(null)
@@ -18,7 +18,7 @@ export default function App() {
     loadQuizData()
       .then((data) => {
         setQuizData(data)
-        setStep('start')
+        setStep((currentStep) => (currentStep === 'loading' ? 'quiz' : currentStep))
       })
       .catch((reason: unknown) => {
         setError(reason instanceof Error ? reason.message : '数据库加载失败')
@@ -29,6 +29,12 @@ export default function App() {
     () => (quizData ? buildQuiz(quizData.questions) : []),
     [quizData]
   )
+
+  const handleStart = () => {
+    setAnswers([])
+    setCurrentIndex(0)
+    setStep(quizData ? 'quiz' : 'loading')
+  }
 
   const handleAnswer = (optionIndex: number) => {
     setAnswers([...answers, optionIndex])
@@ -50,13 +56,7 @@ export default function App() {
           正在从数据库加载题库...
         </div>
       ) : step === 'start' ? (
-        <StartPage
-          onStart={() => {
-            setAnswers([])
-            setCurrentIndex(0)
-            setStep('quiz')
-          }}
-        />
+        <StartPage onStart={handleStart} />
       ) : step === 'result' && quizData ? (
         <ResultPage
           answers={answers}
