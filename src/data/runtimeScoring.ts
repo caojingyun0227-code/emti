@@ -1,5 +1,5 @@
 import type { RuntimePersonality } from "./loadQuizData";
-import { addScore, createInitialScore, getSortedScore, type Score } from "./scoring";
+import { addScore, createInitialScore, getSortedResultScore, type Score } from "./scoring";
 
 const resultByTopScore: Record<keyof Score, number> = {
   H: 1,
@@ -18,7 +18,7 @@ export function getRuntimeResult(
     createInitialScore(),
   );
 
-  const [topScore] = getSortedScore(score);
+  const [topScore] = getSortedResultScore(score);
   const resultId = resultByTopScore[topScore[0]];
   const result = personalities[String(resultId)];
 
