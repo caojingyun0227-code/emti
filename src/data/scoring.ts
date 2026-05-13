@@ -127,3 +127,24 @@ export function getSortedScore(score: Score): [ScoreKey, number][] {
     (a, b) => b[1] - a[1]
   ) as [ScoreKey, number][]
 }
+
+const RESULT_SCORE_WEIGHT: Record<ScoreKey, number> = {
+  H: 1,
+  A: 1,
+  C: 1,
+  G: 0.75,
+  E: 1,
+}
+
+const RESULT_SCORE_OFFSET: Partial<Record<ScoreKey, number>> = {
+  G: -2,
+}
+
+export function getSortedResultScore(score: Score): [ScoreKey, number][] {
+  return (Object.keys(score) as ScoreKey[])
+    .map((key): [ScoreKey, number] => [
+      key,
+      score[key] * RESULT_SCORE_WEIGHT[key] + (RESULT_SCORE_OFFSET[key] ?? 0),
+    ])
+    .sort((a, b) => b[1] - a[1])
+}
