@@ -62,7 +62,7 @@ export default function App() {
           数据库加载失败：{error}
         </div>
       ) : step === 'loading' ? (
-        <div className="max-w-2xl w-full rounded-3xl bg-zinc-900 p-8 text-center shadow-2xl">
+        <div className="quiz-card max-w-2xl w-full rounded-3xl p-8 text-center shadow-2xl">
           正在从数据库加载题库...
         </div>
       ) : step === 'start' ? (
