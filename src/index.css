@@ -54,12 +54,50 @@ body {
   transform: translateY(1px);
 }
 
+.result-card {
+  max-height: calc(100vh - 3rem);
+  overflow: auto;
+}
+
+.result-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(14rem, 0.85fr);
+  align-items: center;
+  gap: clamp(1.5rem, 4vw, 3rem);
+}
+
+.result-text {
+  min-width: 0;
+}
+
+.result-personality-image {
+  width: min(28vw, 19rem);
+  min-width: 13rem;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 2rem;
+  justify-self: center;
+  box-shadow: 0 1.25rem 2.8rem rgba(82, 130, 91, 0.18);
+}
+
 .landing-cover {
   position: fixed;
   inset: 0;
   z-index: 50;
   overflow: hidden;
   background: #fff0f5;
+}
+
+@media (max-width: 760px) {
+  .result-content {
+    grid-template-columns: 1fr;
+  }
+
+  .result-personality-image {
+    width: min(72vw, 18rem);
+    min-width: 0;
+    order: -1;
+  }
 }
 
 .landing-cover-image {
