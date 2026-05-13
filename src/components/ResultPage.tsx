@@ -4,7 +4,7 @@ import type { RuntimePersonality } from '../data/loadQuizData'
 import {
   addScore,
   createInitialScore,
-  getSortedScore,
+  getSortedResultScore,
   type Score,
 } from '../data/scoring'
 
@@ -28,7 +28,7 @@ export default function ResultPage({ answers, questions, personalities }: Props)
       addScore(score, questions[index]?.id ?? 0, optionIndex),
     createInitialScore()
   )
-  const sorted = getSortedScore(scores)
+  const sorted = getSortedResultScore(scores)
   const top = personalities[String(resultByTopScore[sorted[0][0]])]
 
   return (
