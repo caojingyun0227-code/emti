@@ -32,13 +32,13 @@ export default function ResultPage({ answers, questions, personalities }: Props)
   const top = personalities[String(resultByTopScore[sorted[0][0]])]
 
   return (
-    <div className="max-w-3xl w-full bg-zinc-900 rounded-3xl p-8 shadow-2xl">
+    <div className="quiz-card max-w-3xl w-full rounded-3xl p-8 shadow-2xl">
       <h1 className="text-3xl font-bold mb-4">你的主导人格</h1>
       {top && (
         <div>
           <h2 className="text-2xl font-semibold mb-2">{top.name}</h2>
-          <p className="mb-4 text-zinc-300">{top.core}</p>
-          <p className="text-zinc-400">{top.description}</p>
+          <p className="mb-4">{top.core}</p>
+          <p>{top.description}</p>
         </div>
       )}
     </div>
