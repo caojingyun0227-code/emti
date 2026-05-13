@@ -28,6 +28,32 @@ body {
   background-size: cover;
 }
 
+.quiz-card {
+  color: #183326;
+  background: rgba(226, 246, 219, 0.58);
+  border: 1px solid rgba(144, 201, 151, 0.36);
+  box-shadow: 0 1.5rem 4rem rgba(82, 130, 91, 0.18);
+  backdrop-filter: blur(0.45rem);
+}
+
+.quiz-option {
+  color: #183326;
+  background: rgba(245, 255, 240, 0.42);
+  border: 1px solid rgba(137, 194, 146, 0.38);
+}
+
+.quiz-option:hover,
+.quiz-option:focus-visible {
+  background: rgba(245, 255, 240, 0.7);
+  border-color: rgba(98, 164, 112, 0.58);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.quiz-option:active {
+  transform: translateY(1px);
+}
+
 .landing-cover {
   position: fixed;
   inset: 0;
