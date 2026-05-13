@@ -6,17 +6,17 @@ interface Props {
 
 export default function StartPage({ onStart }: Props) {
   return (
-    <section className="landing-cover" aria-label="EMTI 情绪人格测试首页">
+    <section className="landing-cover" aria-label="EMTI home page">
       <img
         className="landing-cover-image"
         src={`${import.meta.env.BASE_URL}emti-cover.png`}
-        alt="EMTI 情绪人格测试"
+        alt="EMTI emotion personality test"
       />
       <button
         className="landing-start-hotspot"
         type="button"
         onClick={onStart}
-        aria-label="立即开始"
+        aria-label="Start quiz"
       />
     </section>
   )
