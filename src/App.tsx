@@ -21,7 +21,7 @@ export default function App() {
         setStep((currentStep) => (currentStep === 'loading' ? 'quiz' : currentStep))
       })
       .catch((reason: unknown) => {
-        setError(reason instanceof Error ? reason.message : '数据库加载失败')
+        setError(reason instanceof Error ? reason.message : '数据加载失败')
       })
   }, [])
 
@@ -45,8 +45,18 @@ export default function App() {
     }
   }
 
+  const appStyle =
+    step === 'start'
+      ? undefined
+      : {
+          backgroundImage: `url(${import.meta.env.BASE_URL}quiz-background.png)`,
+        }
+
   return (
-    <div className="min-h-screen flex items-center justify-center p-6">
+    <div
+      className={`app-shell ${step === 'start' ? 'app-shell-start' : 'app-shell-test'}`}
+      style={appStyle}
+    >
       {error ? (
         <div className="max-w-2xl w-full rounded-3xl border border-red-300 bg-white p-8 text-red-700">
           数据库加载失败：{error}
