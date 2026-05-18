@@ -3,10 +3,9 @@ import React from 'react'
 interface Props {
   current: number
   total: number
-  remainingText: string
 }
 
-export default function ProgressBar({ current, total, remainingText }: Props) {
+export default function ProgressBar({ current, total }: Props) {
   const safeTotal = Math.max(total, 1)
   const progress = Math.min(100, Math.max(0, (current / safeTotal) * 100))
   const questionLabel = `\u7b2c ${current} / ${total} \u9898`
@@ -16,7 +15,6 @@ export default function ProgressBar({ current, total, remainingText }: Props) {
     <div className="mb-6">
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2 text-sm font-medium text-emerald-950/75">
         <span>{questionLabel}</span>
-        <span>{remainingText}</span>
       </div>
       <div
         className="h-3 w-full overflow-hidden rounded-full bg-white/45"
