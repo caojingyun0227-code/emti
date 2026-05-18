@@ -8,7 +8,7 @@ interface Props {
 
 export default function QuestionCard({ question, onAnswer }: Props) {
   return (
-    <div className="quiz-card max-w-2xl w-full rounded-3xl p-6 shadow-2xl">
+    <div>
       <h2 className="text-xl font-semibold mb-6">{question.text}</h2>
       <div className="space-y-3">
         {question.options.map((opt, idx) => (
