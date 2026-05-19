@@ -1,150 +1,237 @@
-export type ScoreKey = 'H' | 'A' | 'C' | 'G' | 'E'
+import { PERSONALITIES } from './personalities'
 
-export type Score = Record<ScoreKey, number>
+export interface Answer {
+  questionId: number
+  optionIndex: number
+}
 
-export type ScoreDelta = Partial<Record<ScoreKey, number>>
+export interface Scores {
+  H: number
+  A: number
+  C: number
+  G: number
+  E: number
+}
 
-export function createInitialScore(): Score {
-  return {
+export interface EmotionScores {
+  joy: number
+  anger: number
+  sadness: number
+  emptiness: number
+  melancholy: number
+}
+
+function addScore(
+  scores: Scores,
+  key: keyof Scores,
+  value: number
+) {
+  scores[key] += value
+}
+
+export function calculateResult(
+  answers: Answer[]
+) {
+  const scores: Scores = {
     H: 0,
     A: 0,
     C: 0,
     G: 0,
     E: 0,
   }
-}
 
-export const SCORE_TABLE: Record<number, ScoreDelta[]> = {
-  1: [{ C: 2, E: 1 }, { H: 1 }, { H: 1, E: 1 }, { G: 1, E: 1 }, { E: 2 }],
-  2: [{ H: 2 }, { G: 1 }, { E: 1 }, { C: 2, G: 1 }, { G: 2, E: 1 }],
-  3: [{ C: 1, G: 1 }, { A: 1, H: 1 }, { E: 1 }, { C: 2 }, { E: 2 }],
-  4: [{ H: 2 }, { C: 1, G: 1 }, { G: 1, E: 1 }, { G: 1 }, { E: 1, G: 1 }],
-  5: [{ C: 1 }, { C: 1 }, { H: 1 }, { G: 1, E: 1 }, { E: 1 }],
-  6: [{ H: 1 }, { C: 2 }, { C: 2, G: 1 }, { E: 1 }, { A: 1 }],
-  7: [{ H: 1 }, { C: 1 }, { E: 1 }, { C: 1, E: 1 }, { E: 2 }],
-  8: [{ C: 1 }, { H: 1 }, { H: 2 }, { E: 1 }, { E: 2, G: 1 }],
-  9: [{ H: 1 }, { E: 1 }, { G: 1 }, { G: 2, E: 1 }, { G: 1, E: 2 }],
-  10: [{ H: 1 }, { E: 1 }, { C: 1, G: 1 }, { H: 2 }, { E: 2 }],
+  answers.forEach(answer => {
+    const { questionId, optionIndex } = answer
 
-  11: [{ H: 1, E: 1 }, { A: 2, G: 1 }, { G: 1, E: 1 }, { C: 1 }, { H: 2 }],
-  12: [{ H: 2 }, { C: 1, G: 1 }, { G: 2, E: 1 }, { G: 1 }, { E: 1, G: 1 }],
-  13: [{ H: 1 }, { C: 1 }, { E: 1 }, { C: 1, E: 1 }, { G: 1 }],
-  14: [{ C: 2 }, { H: 1, C: 1 }, { E: 1 }, { E: 1 }, { C: 2, E: 1 }],
-  15: [{ H: 2 }, { C: 1 }, { C: 1 }, { E: 1 }, { E: 1, G: 1 }],
-  16: [{ C: 2 }, { G: 2, E: 1 }],
-  17: [{ H: 1 }, { G: 1 }, { E: 1 }, { C: 1 }, { C: 1, E: 1 }],
-  18: [{ H: 2 }, { G: 1 }, { C: 1, G: 1 }, { C: 2 }, { G: 2 }],
-  19: [{ H: 1 }, { C: 2 }, { G: 2, E: 1 }, { H: 1 }, { E: 1 }],
-  20: [{ E: 1 }, { C: 2 }, { H: 1 }, { E: 1 }, { C: 1, G: 1 }],
+    switch (questionId) {
+      case 101:
+        addScore(scores, 'H', 6 - optionIndex)
+        break
 
-  21: [{ H: 1 }, { G: 1, E: 1 }, { G: 2 }, { E: 1 }, { G: 1 }],
-  22: [{ E: 1 }, { C: 1, G: 1 }, { G: 1 }, { G: 2, E: 1 }, { C: 1 }],
-  23: [{ E: 1 }, { C: 1 }, { G: 1, E: 1 }, { E: 1 }, { C: 1, G: 1 }],
-  24: [{ C: 2, E: 2 }, { E: 1 }, { H: 1 }],
-  25: [{ E: 1 }, { G: 2, E: 1 }],
-  26: [{ H: 2 }, { E: 1 }, { G: 1 }, { C: 2, G: 1 }, { G: 1 }],
-  27: [{ H: 1 }, { C: 1 }, { C: 2 }, { H: 1, E: 1 }, { E: 2 }],
-  28: [{ C: 1, G: 1 }, { A: 1 }, { C: 1, G: 1 }, { E: 1 }, { E: 2 }],
-  29: [{ H: 1 }, { G: 1 }, { E: 1 }, { G: 2, E: 1 }, { G: 1 }],
-  30: [{ H: 1 }, { E: 1 }, { C: 1 }, { E: 1, G: 1 }, { G: 2 }],
+      case 102:
+        addScore(scores, 'A', optionIndex + 2)
+        break
 
-  31: [{ H: 1 }, { C: 2 }, { G: 2, E: 1 }, { H: 1 }, { E: 1 }],
-  32: [{ H: 1 }, { C: 1, E: 1 }, { C: 2 }, { E: 1 }, { G: 1 }],
-  33: [{ H: 2 }, { G: 2 }, { C: 1, G: 1 }, { E: 1 }, { G: 1, E: 1 }],
-  34: [{ C: 2, G: 1 }, { C: 1 }, { H: 1 }],
-  35: [{ H: 1 }, { C: 1, E: 1 }, { C: 3, E: 3 }, { H: 1 }, { E: 1 }],
-  36: [{ H: 1 }, { G: 1 }, { G: 2, E: 1 }, { E: 1 }, { G: 1 }],
-  37: [{ E: 1 }, { H: 1 }, { G: 2 }, { E: 1 }, { G: 1 }],
-  38: [{ H: 1 }, { A: 1 }, { A: 1, G: 1 }, { C: 1 }, { E: 1 }],
-  39: [{ E: 1 }, { G: 2 }, { G: 2, E: 1 }, { E: 2 }, { H: 1 }],
-  40: [{ G: 1 }, { G: 2 }, { C: 2 }, { G: 2, E: 1 }, { C: 1, E: 1 }],
+      case 103:
+        addScore(scores, 'C', optionIndex + 1)
+        break
 
-  41: [{ H: 2 }, { C: 1 }, { C: 1 }, { G: 1 }, { E: 1 }],
-  42: [{ E: 1 }, { A: 1 }, { A: 2 }, { A: 2, H: 1 }, { A: 1, G: 1 }],
-  43: [{ H: 1 }, { C: 1, G: 1 }, { G: 1 }, { C: 2 }, { E: 1 }],
-  44: [{ H: 2 }, { C: 1 }, { C: 1, G: 1 }, { G: 1 }, { E: 1, C: 1 }],
-  45: [{ H: 1 }, { A: 1, G: 1 }, { A: 2 }, { A: 1, C: 1 }, { G: 1 }],
-  46: [{ G: 2 }, { C: 1, G: 1 }, { G: 2, E: 1 }, { H: 1 }, { E: 1 }],
-  47: [{ H: 1, G: 1 }, { H: 1, G: 1 }, { E: 1 }, { E: 2 }, { C: 1 }],
-  48: [{ H: 2 }, { G: 1 }, { C: 2, G: 1 }, { E: 1 }, { G: 1, E: 1 }],
-  49: [{ C: 2 }, { G: 2, E: 1 }],
-  50: [{ H: 1 }, { A: 2 }, { G: 1 }, { A: 1, G: 1 }, { C: 1, G: 1 }],
+      case 104:
+        addScore(scores, 'G', optionIndex + 1)
+        break
 
-  51: [{ H: 2 }, { A: 1 }, { G: 1 }, { C: 1 }, { E: 1 }],
-  52: [{ H: 2 }, { E: 1 }, { C: 1 }, { G: 1, E: 1 }, { G: 1 }],
-  53: [{ C: 1 }, { C: 1 }, { E: 1 }, { G: 1 }, { C: 1, G: 1 }],
-  54: [{ H: 1 }, { H: 1, G: 1 }, { C: 1 }, { G: 1 }, { G: 2 }],
-  55: [{ H: 2 }, { G: 1 }, { C: 1 }, { G: 1, E: 1 }, { E: 1 }],
-  56: [{ G: 2 }, { G: 3, C: 1 }, { G: 1 }, { H: 1 }, { E: 1 }],
-  57: [{ H: 1 }, { C: 1, G: 1 }, { C: 1, G: 1 }, { E: 1 }, { G: 1 }],
-  58: [{ H: 2 }, { H: 1 }, { G: 1 }, { E: 1 }, { G: 1, E: 1 }],
-  59: [{ H: 1 }, { E: 1 }, { A: 1, G: 1 }, { A: 1 }, { C: 1, G: 1 }],
-  60: [{ H: 1 }, { G: 1 }, { G: 2 }, { H: 1 }, { E: 1 }],
+      case 105:
+        addScore(scores, 'E', optionIndex + 2)
+        break
 
-  61: [{ G: 2, E: 1 }, { G: 1 }, { H: 1 }],
-  62: [{ H: 1 }, { G: 1 }, { C: 1 }, { H: 1, E: 1 }, { E: 1, G: 1 }],
-  63: [{ H: 2 }, { H: 1 }, { C: 1 }, { E: 1 }, { E: 2 }],
-  64: [{ H: 1, G: 1 }, { C: 1 }, { G: 2 }, { E: 1, G: 1 }, { C: 1 }],
-  65: [{ H: 1 }, { A: 1 }, { C: 1, G: 1 }, { C: 2 }, { E: 1 }],
-  66: [{ H: 1 }, { E: 1 }, { C: 1 }, { C: 1, E: 1 }, { C: 1, G: 1 }],
-  67: [{ H: 2 }, { C: 1 }, { C: 1 }, { C: 2 }, { C: 1, G: 1 }],
-  68: [{ C: 2, G: 1 }, { C: 1 }, { H: 1 }],
-  69: [{ H: 1 }, { E: 1 }, { C: 1 }, { C: 2 }, { E: 2, G: 1 }],
-  70: [{ H: 1 }, { G: 1 }, { A: 1 }, { G: 2, E: 1 }, { E: 1 }],
+      case 106:
+        addScore(scores, 'H', 2)
+        addScore(scores, 'C', optionIndex + 1)
+        break
 
-  71: [{ H: 2 }, { C: 1 }, { C: 1, G: 1 }, { E: 1 }, { C: 2 }],
-  72: [{ H: 1 }, { E: 1 }, { H: 1, G: 1 }, { C: 2 }, { C: 1, E: 1 }],
-  73: [{ A: 1, G: 2 }, { G: 1 }, { H: 1 }],
-  74: [{ H: 2 }, { C: 1 }, { E: 1, G: 1 }, { C: 1, G: 1 }, { G: 1 }],
-  75: [{ H: 1 }, { G: 1, E: 1 }, { G: 3, E: 2 }, { G: 1 }, { E: 1 }],
-  76: [{ H: 1 }, { C: 1 }, { C: 1 }, { H: 1, C: 1 }, { C: 1, G: 1 }],
-  77: [{ H: 2 }, { H: 2 }, { H: 1, G: 1 }, { G: 1 }, { H: 1, C: 1 }],
-  78: [{ E: 2, G: 1 }, { E: 1 }, { H: 1 }],
-  79: [{ H: 1 }, { G: 1 }, { A: 1, G: 1 }, { E: 1 }, { G: 2 }],
-  80: [{ A: 1, E: 2 }, { E: 1 }, { H: 1 }],
-}
+      case 107:
+        addScore(scores, 'H', 5 - optionIndex)
+        addScore(scores, 'C', 2)
+        break
 
-export function addScore(
-  score: Score,
-  questionId: number,
-  optionIndex: number
-): Score {
-  const delta = SCORE_TABLE[questionId]?.[optionIndex] || {}
+      case 108:
+        addScore(scores, 'H', 3)
+        addScore(scores, 'G', 5 - optionIndex)
+        break
 
-  const next: Score = {
-    ...score,
-  }
+      case 109:
+        addScore(scores, 'H', 2)
+        addScore(scores, 'E', optionIndex + 1)
+        break
 
-  Object.entries(delta).forEach(([key, value]) => {
-    next[key as ScoreKey] += value || 0
+      case 110:
+        addScore(scores, 'A', optionIndex + 2)
+        addScore(scores, 'C', optionIndex + 1)
+        break
+
+      case 111:
+        addScore(scores, 'A', 2)
+        addScore(scores, 'G', optionIndex + 1)
+        break
+
+      case 112:
+        addScore(scores, 'A', 2)
+        addScore(scores, 'E', optionIndex + 1)
+        break
+
+      case 113:
+        addScore(scores, 'C', optionIndex + 1)
+        addScore(scores, 'G', optionIndex + 1)
+        break
+
+      case 114:
+        addScore(scores, 'C', optionIndex + 1)
+        addScore(scores, 'E', optionIndex + 2)
+        break
+
+      case 115:
+        addScore(scores, 'G', optionIndex + 2)
+        addScore(scores, 'E', optionIndex + 2)
+        break
+
+      case 116:
+        addScore(scores, 'H', 2)
+        addScore(scores, 'A', 2)
+        addScore(scores, 'C', 2)
+        addScore(scores, 'G', 2)
+        addScore(scores, 'E', optionIndex + 2)
+        break
+
+      case 301:
+        scores.A += optionIndex + 1
+        scores.C += optionIndex
+        break
+
+      case 302:
+        scores.H += 5 - optionIndex
+        scores.C += 2
+        break
+
+      case 303:
+        scores.H += 2
+        scores.G += 5 - optionIndex
+        break
+
+      case 304:
+        scores.C += optionIndex
+        scores.G += optionIndex
+        break
+
+      case 305:
+        scores.C += optionIndex
+        scores.E += optionIndex
+        break
+
+      case 306:
+        scores.G += optionIndex + 1
+        scores.E += optionIndex + 2
+        break
+
+      case 307:
+        scores.A += optionIndex
+        scores.G += optionIndex
+        break
+
+      case 308:
+        scores.H += 2
+        scores.A += 2
+        scores.C += 2
+        scores.G += 2
+        scores.E += optionIndex
+        break
+
+      case 309:
+        scores.H += 2
+        scores.C += optionIndex
+        break
+    }
   })
 
-  return next
-}
+  const personalityScores = [
+    {
+      id: 1,
+      score: scores.H * 1.2,
+    },
+    {
+      id: 2,
+      score: scores.A * 1.2,
+    },
+    {
+      id: 3,
+      score: scores.C * 1.2,
+    },
+    {
+      id: 4,
+      score: scores.G * 1.2,
+    },
+    {
+      id: 5,
+      score: scores.E * 1.2,
+    },
+    { id: 6, score: scores.H + scores.C },
+    { id: 7, score: scores.H * 1.3 + scores.C },
+    { id: 8, score: scores.H + scores.G },
+    { id: 9, score: scores.H + scores.E },
+    { id: 10, score: scores.A + scores.C },
+    { id: 11, score: scores.A + scores.G },
+    { id: 12, score: scores.A + scores.E },
+    { id: 13, score: scores.C + scores.G },
+    { id: 14, score: scores.C + scores.E },
+    { id: 15, score: scores.G * 1.3 + scores.E * 1.4 },
+    {
+      id: 16,
+      score:
+        (scores.H +
+          scores.A +
+          scores.C +
+          scores.G +
+          scores.E) /
+        2,
+    },
+  ]
 
-export function getSortedScore(score: Score): [ScoreKey, number][] {
-  return Object.entries(score).sort(
-    (a, b) => b[1] - a[1]
-  ) as [ScoreKey, number][]
-}
+  const sorted = personalityScores.sort(
+    (a, b) => b.score - a.score
+  )
 
-const RESULT_SCORE_WEIGHT: Record<ScoreKey, number> = {
-  H: 1,
-  A: 1,
-  C: 1,
-  G: 0.75,
-  E: 1,
-}
+  const getPersonality = (id: number) =>
+    PERSONALITIES.find(personality => personality.id === id)
 
-const RESULT_SCORE_OFFSET: Partial<Record<ScoreKey, number>> = {
-  G: -2,
-}
+  const emotionScores: EmotionScores = {
+    joy: scores.H,
+    anger: scores.A,
+    sadness: scores.C,
+    emptiness: scores.E,
+    melancholy: scores.G,
+  }
 
-export function getSortedResultScore(score: Score): [ScoreKey, number][] {
-  return (Object.keys(score) as ScoreKey[])
-    .map((key): [ScoreKey, number] => [
-      key,
-      score[key] * RESULT_SCORE_WEIGHT[key] + (RESULT_SCORE_OFFSET[key] ?? 0),
-    ])
-    .sort((a, b) => b[1] - a[1])
+  return {
+    personality: getPersonality(sorted[0].id),
+    emotionScores,
+  }
 }
