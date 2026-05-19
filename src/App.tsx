@@ -1,44 +1,28 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import StartPage from './components/StartPage'
 import QuestionCard from './components/QuestionCard'
 import ProgressBar from './components/ProgressBar'
 import ResultPage from './components/ResultPage'
 import { buildQuiz } from './data/buildQuiz'
-import { loadQuizData, type QuizData } from './data/loadQuizData'
+import { getLocalQuizData } from './data/loadQuizData'
 
-type Step = 'loading' | 'start' | 'quiz' | 'result'
-
-const LOAD_ERROR_TEXT = '\u6570\u636e\u52a0\u8f7d\u5931\u8d25'
-const DATABASE_LOAD_FAILED_TEXT = '\u6570\u636e\u5e93\u52a0\u8f7d\u5931\u8d25\uff1a'
-const LOADING_QUIZ_TEXT = '\u6b63\u5728\u4ece\u6570\u636e\u5e93\u52a0\u8f7d\u9898\u5e93...'
+type Step = 'start' | 'quiz' | 'result'
 
 export default function App() {
-  const [quizData, setQuizData] = useState<QuizData | null>(null)
+  const [quizData] = useState(() => getLocalQuizData())
   const [step, setStep] = useState<Step>('start')
   const [currentIndex, setCurrentIndex] = useState(0)
   const [answers, setAnswers] = useState<number[]>([])
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    loadQuizData()
-      .then((data) => {
-        setQuizData(data)
-        setStep((currentStep) => (currentStep === 'loading' ? 'quiz' : currentStep))
-      })
-      .catch((reason: unknown) => {
-        setError(reason instanceof Error ? reason.message : LOAD_ERROR_TEXT)
-      })
-  }, [])
 
   const quiz = useMemo(
-    () => (quizData ? buildQuiz(quizData.questions) : []),
-    [quizData]
+    () => buildQuiz(),
+    []
   )
 
   const handleStart = () => {
     setAnswers([])
     setCurrentIndex(0)
-    setStep(quizData ? 'quiz' : 'loading')
+    setStep('quiz')
   }
 
   const handleAnswer = (optionIndex: number) => {
@@ -62,18 +46,9 @@ export default function App() {
       className={`app-shell ${step === 'start' ? 'app-shell-start' : 'app-shell-test'}`}
       style={appStyle}
     >
-      {error ? (
-        <div className="max-w-2xl w-full rounded-3xl border border-red-300 bg-white p-8 text-red-700">
-          {DATABASE_LOAD_FAILED_TEXT}
-          {error}
-        </div>
-      ) : step === 'loading' ? (
-        <div className="quiz-card max-w-2xl w-full rounded-3xl p-8 text-center shadow-2xl">
-          {LOADING_QUIZ_TEXT}
-        </div>
-      ) : step === 'start' ? (
+      {step === 'start' ? (
         <StartPage onStart={handleStart} />
-      ) : step === 'result' && quizData ? (
+      ) : step === 'result' ? (
         <ResultPage
           answers={answers}
           questions={quiz}
