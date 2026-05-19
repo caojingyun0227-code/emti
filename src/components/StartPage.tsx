@@ -17,7 +17,9 @@ export default function StartPage({ onStart }: Props) {
         type="button"
         onClick={onStart}
         aria-label="Start quiz"
-      />
+      >
+        <span>立即开始</span>
+      </button>
     </section>
   )
 }
